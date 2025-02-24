@@ -8,18 +8,12 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function show($id)
-    {
-        $user = User::findOrFail($id);
-        return view('profileUser', compact('user'));
-    }
-    
     public static function getAllUsers()
     {
         $listusers = User::where('id', '!=', auth()->id())->get();
         return view('users', compact('listusers'));
     }
-
+    
     
     public function search(Request $request)
     {
@@ -31,6 +25,12 @@ class UserController extends Controller
         
         return view('/users', compact('listusers'));
     }
-
+    
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return view('profileUser', compact('user'));
+    }
+    
     
 }

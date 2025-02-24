@@ -32,14 +32,12 @@
                         <p class="text-sm text-gray-500 dark:text-gray-400">@ {{ $user->username }}</p>
                     </div>
                 </div>
-                <button
-                    class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
-                    Ajouter ami
-                </button>
-                {{-- <a href="{{ route('profileUser', $user->id) }}"
-                    class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
-                     View Profile
-                 </a> --}}
+                @if ($user->id != auth()->id())
+                    <button
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
+                        Ajouter ami
+                    </button>
+                @endif
             </li>
         @endforeach
     </ul>
