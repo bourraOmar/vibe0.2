@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FriendRequestController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', function () {
@@ -46,3 +47,9 @@ Route::post('/email/verification-notification', function (Request $request) {
 
     return back()->with('status', 'verification-link-sent');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/friend-request/{id}', [FriendRequestController::class, 'sendRequest'])->name('friend.request.send');
+    Route::post('/friend-request/accept/{id}', [FriendRequestController::class, 'acceptRequest'])->name('friend.request.accept');
+    Route::post('/friend-request/reject/{id}', [FriendRequestController::class, 'rejectRequest'])->name('friend.request.reject');
+});

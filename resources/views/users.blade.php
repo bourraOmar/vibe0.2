@@ -16,7 +16,7 @@
         </form>
     </div>
     <ul class="space-y-6 px-4">
-        @foreach ($listusers as $user)
+        {{-- @foreach ($listusers as $user)
             <li
                 class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="flex items-center space-x-4">
@@ -39,6 +39,31 @@
                     </button>
                 @endif
             </li>
+        @endforeach --}}
+
+        @foreach ($users as $user)
+            <div class="p-4 bg-white shadow rounded-lg">
+                <h2 class="text-xl font-bold">{{ $user->fullname }}</h2>
+                <p class="text-gray-500">@ {{ $user->username }}</p>
+
+                @if ($user->id != auth()->id())
+                    <!-- Vérifier si une demande d'ami a déjà été envoyée -->
+                    @php
+                        $friendRequest = \App\Models\FriendRequest::where('sender_id', auth()->id())
+                            ->where('receiver_id', $user->id)
+                            ->first();
+                    @endphp
+
+                    @if (!$friendRequest)
+                        <form action="{{ route('friend.request.send', $user->id) }}" method="POST">
+                            @csrf
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Ajouter ami</button>
+                        </form>
+                    @elseif($friendRequest->status == 'pending')
+                        <button class="bg-gray-500 text-white px-4 py-2 rounded-lg" disabled>Demande envoyée</button>
+                    @endif
+                @endif
+            </div>
         @endforeach
     </ul>
 </x-app-layout>
