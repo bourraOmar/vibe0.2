@@ -18,6 +18,13 @@
                     <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
                         {{ __('Users') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('requests')" :active="request()->routeIs('requests')">
+                        {{ __('Requests') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('friends')" :active="request()->routeIs('friends')">
+                        {{ __('Friends') }}
+                    </x-nav-link>
+                    
                 </div>
             </div>
 
@@ -86,11 +93,6 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
-
-                <x-responsive-nav-link :href="route('requists')">
-                    {{ __('Requists') }}
-                </x-responsive-nav-link>
-
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

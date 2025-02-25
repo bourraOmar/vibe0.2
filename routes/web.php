@@ -24,12 +24,12 @@ Route::middleware('auth')->group(function () {
 Route::get('/profileUser/{id}', [UserController::class, 'show'])->name('profileUser');
 
 Route::get('/users', [UserController::class, 'getAllUsers'])
-->middleware(['auth', 'verified'])
-->name('users');
+    ->middleware(['auth', 'verified'])
+    ->name('users');
 
 Route::get('/search', [UserController::class, 'search']);
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // email sender
 Route::get('/email/verify', function () {
@@ -48,8 +48,19 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('status', 'verification-link-sent');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
+//friends requists
+
 Route::middleware(['auth'])->group(function () {
-    Route::post('/friend-request/{id}', [FriendRequestController::class, 'sendRequest'])->name('friend.request.send');
+    Route::post('/friend-request/{id}', [FriendRequestController::class, 'sendRequest'])->name('request.send');
     Route::post('/friend-request/accept/{id}', [FriendRequestController::class, 'acceptRequest'])->name('friend.request.accept');
     Route::post('/friend-request/reject/{id}', [FriendRequestController::class, 'rejectRequest'])->name('friend.request.reject');
 });
+
+Route::get('/friend-requests', [FriendRequestController::class, 'showRequests'])->name('requests');
+
+
+//list friends
+
+Route::get('/friends', [UserController::class, 'friendsList'])->name('friends')->middleware('auth');
+
+

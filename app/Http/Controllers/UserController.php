@@ -13,24 +13,30 @@ class UserController extends Controller
         $listusers = User::where('id', '!=', auth()->id())->get();
         return view('users', compact('listusers'));
     }
-    
-    
+
+
     public function search(Request $request)
     {
         $query = request()->term;
-        
+
         $listusers = User::where('username', 'LIKE', "%{$query}%")
-        ->orWhere('fullname', 'LIKE', "%{$query}%")
-        ->get();
-        
+            ->orWhere('fullname', 'LIKE', "%{$query}%")
+            ->get();
+
         return view('/users', compact('listusers'));
     }
-    
+
     public function show($id)
     {
         $user = User::findOrFail($id);
         return view('profileUser', compact('user'));
     }
-    
-    
+
+    public function friendsList()
+{
+    $user = auth()->user();
+    $friends = $user->friends()->get(); 
+    return view('friends', compact('friends'));
+}
+
 }

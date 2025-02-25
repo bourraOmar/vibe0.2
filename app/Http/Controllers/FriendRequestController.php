@@ -29,7 +29,7 @@ class FriendRequestController extends Controller
     public function acceptRequest($request_id)
     {
         $request = FriendRequest::findOrFail($request_id);
-        
+
         if ($request->receiver_id != Auth::id()) {
             return back()->with('error', 'Non autorisé.');
         }
@@ -52,4 +52,12 @@ class FriendRequestController extends Controller
 
         return back()->with('success', 'Demande refusée.');
     }
+
+    public function showRequests()
+    {
+        $friendRequests = FriendRequest::where('receiver_id', Auth::id())->where('status', 'pending')->get();
+        return view('requests', compact('friendRequests'));
+    }
+
+    
 }
