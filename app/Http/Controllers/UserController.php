@@ -32,11 +32,5 @@ class UserController extends Controller
         return view('profileUser', compact('user'));
     }
 
-    public function friendsList()
-{
-    $user = auth()->user();
-    $friends = $user->friends()->get(); 
-    return view('friends', compact('friends'));
-}
 
 }

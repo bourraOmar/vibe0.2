@@ -59,8 +59,3 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/friend-requests', [FriendRequestController::class, 'showRequests'])->name('requests');
 
 
-//list friends
-
-Route::get('/friends', [UserController::class, 'friendsList'])->name('friends')->middleware('auth');
-
-
