@@ -2,69 +2,48 @@
     <main class="flex justify-center items-center min-h-screen bg-[#111826] text-white">
         <div class="max-w-4xl w-full px-6 py-10">
             <!-- Profile Header -->
-            <div class="bg-[#1f2a37] rounded-2xl shadow-xl p-8 mb-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="bg-[#1f2a37] rounded-2xl shadow-xl p-8 mb-8">
                 <div class="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
                     <!-- Profile Picture -->
-                    <div class="relative group">
-                        <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="Profile picture" class="w-40 h-40 rounded-full object-cover border-4 border-[#1f2a37] group-hover:border-[#3b82f6] transition-all duration-300">
-                        <div class="absolute bottom-2 right-2 w-4 h-4 bg-green-400 rounded-full border-2 border-[#111826] animate-pulse"></div>
+                    <div class="relative">
+                        <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="Profile picture" class="w-40 h-40 rounded-full object-cover border-4 border-[#1f2a37]">
                     </div>
 
                     <!-- Profile Info -->
                     <div class="flex-1 text-center sm:text-left">
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                                <h1 class="text-3xl font-bold text-white">{{$user->fullname}}</h1>
-                                <p class="text-gray-400 text-lg mt-1">@ {{$user->username}}</p>
-                            </div>
-                        </div>
-                        <p class="mt-4 text-gray-300 max-w-2xl leading-relaxed">
-                            {{ $user->bio ?? 'There is no bio yet.' }}
-                        </p>
+                        <h1 class="text-3xl font-bold text-white">{{$user->fullname}}</h1>
+                        <p class="text-gray-400 text-lg mt-1">@ {{$user->username}}</p>
+                        <p class="text-gray-400 text-lg mt-1">500 Friends</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Profile Details -->
-            <div class="bg-[#1f2a37] rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                <h2 class="text-2xl font-bold text-white mb-6">Profile Information</h2>
+            <!-- Profile Content -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- About Section -->
+                <div class="bg-[#1f2a37] rounded-2xl shadow-xl p-6">
+                    <h2 class="text-2xl font-bold text-white mb-4">bio</h2>
+                    <p class="text-gray-300">
+                        {{ $user->bio ?? 'There is no bio yet.' }}
+                    </p>
+                </div>
 
-                <!-- Information Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Personal Information -->
-                    <div class="space-y-6">
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-400">Full Name</h3>
-                            <p class="mt-1 text-lg font-semibold text-white">{{$user->fullname}}</p>
-                        </div>
-
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-400">Username</h3>
-                            <p class="mt-1 text-lg font-semibold text-white">@ {{$user->username}}</p>
-                        </div>
-
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-400">Email</h3>
-                            <p class="mt-1 text-lg font-semibold text-white">{{$user->email}}</p>
-                        </div>
+                <!-- Posts Section -->
+                <div class="col-span-2 bg-[#1f2a37] rounded-2xl shadow-xl p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-white">Posts</h2>
+                        <button id="addPostButton" class="bg-[#3b82f6] text-white px-4 py-2 rounded-lg hover:bg-[#60a5fa] transition-all duration-300">
+                            Add Post
+                        </button>
                     </div>
-
-                    <!-- Additional Information -->
-                    <div class="space-y-6">
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-400">Phone</h3>
-                            <p class="mt-1 text-lg font-semibold text-white">{{$user->phone ?? 'Not provided'}}</p>
-                        </div>
-
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-400">Location</h3>
-                            <p class="mt-1 text-lg font-semibold text-white">{{$user->location ?? 'Not specified'}}</p>
-                        </div>
-
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-400">Joined</h3>
-                            <p class="mt-1 text-lg font-semibold text-white">{{$user->created_at->format('M d, Y')}}</p>
-                        </div>
+                    <!-- Existing Posts -->
+                    <div class="bg-[#2a3647] rounded-lg p-4 mb-4">
+                        <p class="text-gray-300">Hello, this is a sample post!</p>
+                        <p class="text-gray-500 text-sm mt-2">2 hours ago</p>
+                    </div>
+                    <div class="bg-[#2a3647] rounded-lg p-4 mb-4">
+                        <p class="text-gray-300">Another post here. Enjoy the dark theme!</p>
+                        <p class="text-gray-500 text-sm mt-2">5 hours ago</p>
                     </div>
                 </div>
             </div>
@@ -80,4 +59,67 @@
             </div>
         </div>
     </main>
+
+    <!-- Popup Form -->
+    <div id="postFormPopup" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+        <div class="bg-[#1f2a37] rounded-2xl shadow-xl p-8 w-full max-w-md mx-8">
+            <h2 class="text-2xl font-bold text-white mb-4">Add a New Post</h2>
+            <form id="postForm">
+                <div class="mb-4">
+                    <label for="postContent" class="block text-gray-300 text-sm font-medium mb-2">Content</label>
+                    <textarea id="postContent" name="content" rows="4" class="w-full bg-[#2a3647] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3b82f6]" placeholder="Write your post here..."></textarea>
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="cancelPostButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-all duration-300">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-[#3b82f6] text-white px-4 py-2 rounded-lg hover:bg-[#60a5fa] transition-all duration-300">
+                        Post
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addPostButton = document.getElementById('addPostButton');
+            const postFormPopup = document.getElementById('postFormPopup');
+            const cancelPostButton = document.getElementById('cancelPostButton');
+            const postForm = document.getElementById('postForm');
+
+            // Show the popup form when the "Add Post" button is clicked
+            addPostButton.addEventListener('click', function() {
+                postFormPopup.classList.remove('hidden');
+            });
+
+            // Hide the popup form when the "Cancel" button is clicked
+            cancelPostButton.addEventListener('click', function() {
+                postFormPopup.classList.add('hidden');
+            });
+
+            // Handle form submission
+            postForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const postContent = document.getElementById('postContent').value;
+
+                // Here you can handle the form submission, e.g., send the data to the server
+                console.log('Post Content:', postContent);
+
+                // Clear the form and hide the popup
+                postForm.reset();
+                postFormPopup.classList.add('hidden');
+            });
+        });
+    </script>
+
+    <style>
+        #postFormPopup {
+            transition: opacity 0.3s ease-in-out;
+        }
+        #postFormPopup.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
 </x-app-layout>

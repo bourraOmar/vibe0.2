@@ -10,15 +10,14 @@
             <p class="text-center text-gray-500">Aucune demande d'ami en attente.</p>
         @else
             @foreach ($friendRequests as $request)
-            <div class="p-6 bg-white dark:bg-gray-800 shadow-lg rounded-xl flex flex-col sm:flex-row items-center justify-between transition-all duration-300 hover:shadow-xl">
+            <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <!-- User Information -->
                 <div class="flex items-center space-x-4">
                     <!-- Profile Picture -->
                     <div class="relative">
-                        <img class="h-14 w-14 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 transition-all duration-300"
+                        <img class="w-12 h-12 rounded-full object-cover"
                             src="{{ asset('storage/' . $request->sender->profile_photo) }}"
                             alt="Photo de {{ $request->sender->fullname }}">
-                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
                     </div>
             
                     <!-- User Details -->

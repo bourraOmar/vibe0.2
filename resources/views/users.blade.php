@@ -22,7 +22,7 @@
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('profileUser', $user->id) }}">
                         <div class="p-2">
-                            <img style="width: 50px;" class="w-12 h-12 rounded-full object-cover"
+                            <img class="w-12 h-12 rounded-full object-cover"
                                 src="{{ asset('storage/' . $user->profile_photo) }}" alt="Profile Photo">
                         </div>
                     </a>
@@ -46,35 +46,12 @@
                             <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Friend Request</button>
                         </form>
                     @elseif($friendRequest->status == 'pending')
-                        <button class="bg-gray-500 text-white px-4 py-2 rounded-lg" disabled>✅</button>
+                        <button class="bg-gray-500 text-white px-4 py-2 rounded-lg" disabled>Pending...</button>
+                    @elseif($friendRequest->status == 'accepted')
+                        <button class="bg-gray-500 text-white px-4 py-2 rounded-lg" disabled>Friend</button>
                     @endif
                 @endif
             </li>
         @endforeach
-
-        {{-- @foreach ($listusers as $user)
-            <div class="p-4 bg-white shadow rounded-lg">
-                <h2 class="text-xl font-bold">{{ $user->fullname }}</h2>
-                <p class="text-gray-500">@ {{ $user->username }}</p>
-
-                @if ($user->id != auth()->id())
-                    <!-- Vérifier si une demande d'ami a déjà été envoyée -->
-                    @php
-                        $friendRequest = \App\Models\FriendRequest::where('sender_id', auth()->id())
-                            ->where('receiver_id', $user->id)
-                            ->first();
-                    @endphp
-
-                    @if (!$friendRequest)
-                        <form action="{{ route('request.send', $user->id) }}" method="POST">
-                            @csrf
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Ajouter ami</button>
-                        </form>
-                    @elseif($friendRequest->status == 'pending')
-                        <button class="bg-gray-500 text-white px-4 py-2 rounded-lg" disabled>Demande envoyée</button>
-                    @endif
-                @endif
-            </div>
-        @endforeach --}}
     </ul>
 </x-app-layout>
