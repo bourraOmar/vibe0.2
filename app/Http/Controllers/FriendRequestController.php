@@ -12,13 +12,13 @@ class FriendRequestController extends Controller
     public function sendRequest($receiver_id)
     {
         // Vérifie si la demande existe déjà
-        if (FriendRequest::where('sender_id', Auth::id())->where('receiver_id', $receiver_id)->exists()) {
+        if (FriendRequest::where('user_id', Auth::id())->where('friend_id', $receiver_id)->exists()) {
             return back()->with('error', 'Demande déjà envoyée.');
         }
 
         FriendRequest::create([
-            'sender_id' => Auth::id(),
-            'receiver_id' => $receiver_id,
+            'user_id' => Auth::id(),
+            'friend_id' => $receiver_id,
             'status' => 'pending',
         ]);
 
@@ -30,7 +30,7 @@ class FriendRequestController extends Controller
     {
         $request = FriendRequest::findOrFail($request_id);
 
-        if ($request->receiver_id != Auth::id()) {
+        if ($request->friend_id != Auth::id()) {
             return back()->with('error', 'Non autorisé.');
         }
 
@@ -44,7 +44,7 @@ class FriendRequestController extends Controller
     {
         $request = FriendRequest::findOrFail($request_id);
 
-        if ($request->receiver_id != Auth::id()) {
+        if ($request->friend_id != Auth::id()) {
             return back()->with('error', 'Non autorisé.');
         }
 
@@ -55,7 +55,7 @@ class FriendRequestController extends Controller
 
     public function showRequests()
     {
-        $friendRequests = FriendRequest::where('receiver_id', Auth::id())->where('status', 'pending')->get();
+        $friendRequests = FriendRequest::where('friend_id', Auth::id())->where('status', 'pending')->get();
         return view('requests', compact('friendRequests'));
     }
 

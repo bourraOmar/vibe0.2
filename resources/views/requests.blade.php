@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <ul class="space-y-6 px-4">
+    <ul class="space-y-6 px-4 py-12">
         @if ($friendRequests->isEmpty())
             <p class="text-center text-gray-500">Aucune demande d'ami en attente.</p>
         @else

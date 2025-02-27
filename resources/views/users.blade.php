@@ -35,8 +35,8 @@
                @if ($user->id != auth()->id())
                     <!-- Vérifier si une demande d'ami a déjà été envoyée -->
                     @php
-                        $friendRequest = \App\Models\FriendRequest::where('sender_id', auth()->id())
-                            ->where('receiver_id', $user->id)
+                        $friendRequest = \App\Models\FriendRequest::where('user_id', auth()->id())
+                            ->where('friend_id', $user->id)
                             ->first();
                     @endphp
 

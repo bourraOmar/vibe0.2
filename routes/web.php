@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FriendRequestController;
@@ -57,5 +58,13 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/friend-requests', [FriendRequestController::class, 'showRequests'])->name('requests');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/profile/{id}', [PostController::class, 'userPosts'])->name('profile');
+});
+
+
 
 
