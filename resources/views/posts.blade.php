@@ -64,7 +64,7 @@
                             </svg>
                             <span>Likes</span>
                         </button>
-                        <button
+                        <button onclick="toggleComments({{ $post->id }})"
                             class="flex items-center space-x-2 text-gray-400 hover:bg-gray-700 px-2 py-1 rounded-md">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -93,14 +93,15 @@
                         <input type="text" name="content" placeholder="  Write a comment..."
                             class="bg-gray-700 w-full outline-none py-1 text-gray-200 placeholder-gray-400">
                         <button type="submit"
-                            class="ml-2 text-indigo-400 hover:text-indigo-300 font-medium px-3 py-1 rounded-md hover:bg-indigo-600/20 transition duration-200">
+                            class="ml-2 text-white
+                          hover:text-indigo-300 font-medium px-3 py-1 rounded-md hover:bg-indigo-600/20 transition duration-200">
                             Post
                         </button>
                     </form>
                 </div>
 
                 <!-- Display Comments -->
-                <div class="px-4 py-2">
+                <div id="comments-{{ $post->id }}" class="px-4 py-2 hidden">
                     @foreach ($post->comments as $comment)
                         <div class="flex items-start space-x-3 mb-3">
                             <img class="w-12 h-12 rounded-full object-cover"
@@ -143,6 +144,15 @@
                     location.reload(); // Refresh to update like count
                 });
         }
+
+        function toggleComments(postId) {
+        let commentSection = document.getElementById(`comments-${postId}`);
+        if (commentSection.classList.contains('hidden')) {
+            commentSection.classList.remove('hidden');
+        } else {
+            commentSection.classList.add('hidden');
+        }
+    }
     </script>
 
 </x-app-layout>
