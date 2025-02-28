@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FriendRequestController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -75,5 +76,6 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/posts/{post}/like', [LikeController::class, 'likePost'])->middleware('auth');
 
 
-
+Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comment.store')->middleware('auth');
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy')->middleware('auth');
 

@@ -7,8 +7,11 @@
             <div class="bg-gray-800 my-10 rounded-lg shadow-lg mb-4 border border-gray-700">
                 <!-- Post Header -->
                 <div class="p-4 flex items-start">
-                    <img class="h-10 w-10 rounded-full mr-3"
-                        src="{{ $post->user->profile_photo_url ?? asset('default-avatar.png') }}" alt="Profile picture" />
+                    <img class="w-12 h-12 rounded-full object-cover"
+                        src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : asset('default-avatar.png') }}"
+                        alt="Profile picture" />
+
+
                     <div>
                         <div class="flex items-center">
                             <h3 class="font-bold text-gray-100">{{ $post->user->name }}</h3>
@@ -44,7 +47,7 @@
                             </div>
                             <span class="text-gray-400 text-sm">{{ $post->likes->count() }}</span>
                         </div>
-                        <div class="text-gray-400 text-sm">42 comments • 18 shares</div>
+                        <div class="text-gray-400 text-sm">{{ $post->comments->count() }} comments • 18 shares</div>
                     </div>
                 </div>
 
@@ -83,12 +86,43 @@
                 </div>
 
                 <!-- Comment Input -->
-                <div class="px-4 py-3 border-t border-gray-700 flex">
-                    <img class="h-8 w-8 rounded-full mr-3" src="/api/placeholder/32/32" alt="Your profile" />
-                    <div class="flex-1 bg-gray-700 rounded-full flex items-center px-4">
-                        <input type="text" placeholder="Write a comment..."
-                            class="bg-transparent w-full outline-none py-1 text-gray-200 placeholder-gray-400" />
-                    </div>
+                <div class="px-4 py-3 border-t border-gray-700 flex items-center">
+                    <form action="{{ route('comment.store', $post) }}" method="POST"
+                        class="flex-1 bg-gray-700 hover:bg-gray-600 focus-within:bg-gray-600 rounded-lg flex items-center px-4 transition duration-200 border border-gray-600 focus-within:border-indigo-500">
+                        @csrf
+                        <input type="text" name="content" placeholder="  Write a comment..."
+                            class="bg-gray-700 w-full outline-none py-1 text-gray-200 placeholder-gray-400">
+                        <button type="submit"
+                            class="ml-2 text-indigo-400 hover:text-indigo-300 font-medium px-3 py-1 rounded-md hover:bg-indigo-600/20 transition duration-200">
+                            Post
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Display Comments -->
+                <div class="px-4 py-2">
+                    @foreach ($post->comments as $comment)
+                        <div class="flex items-start space-x-3 mb-3">
+                            <img class="w-12 h-12 rounded-full object-cover"
+                                src="{{ $comment->user->profile_photo ? asset('storage/' . $comment->user->profile_photo) : asset('default-avatar.png') }}"
+                                alt="User profile picture" />
+                            <div>
+                                <p class="text-gray-300 text-sm">
+                                    <strong>{{ $comment->user->name }}</strong> {{ $comment->content }}
+                                </p>
+                                <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+
+                                @if (auth()->id() == $comment->user_id)
+                                    <form action="{{ route('comment.destroy', $comment) }}" method="POST"
+                                        class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 text-xs ml-2">Delete</button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         @empty
@@ -99,15 +133,15 @@
     <script>
         function toggleLike(postId) {
             fetch(`/posts/${postId}/like`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
-                }
-            }).then(response => response.json())
-            .then(data => {
-                location.reload(); // Refresh to update like count
-            });
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    }
+                }).then(response => response.json())
+                .then(data => {
+                    location.reload(); // Refresh to update like count
+                });
         }
     </script>
 
