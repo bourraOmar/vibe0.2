@@ -111,22 +111,20 @@
             <h2 class="text-2xl font-bold text-white mb-4">Add a New Post</h2>
             <form id="postForm" action="{{ route('posts.store') }}" method="POST">
                 @csrf
-                <div class="mb-4">
-                    <label for="postContent" class="block text-gray-300 text-sm font-medium mb-2">Content</label>
-                    <textarea id="postContent" name="content" rows="4"
-                        class="w-full bg-[#2a3647] text-back rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
-                        placeholder="Write your post here..."></textarea>
+                <!-- Post Content -->
+                <textarea name="content" class="w-full p-3 rounded-lg bg-[#2a3647] text-gray-300" placeholder="What's on your mind?"
+                    rows="3"></textarea>
+
+                <!-- OR Upload Photo -->
+                <div class="mt-4">
+                    <label class="block text-gray-300">Upload a Photo:</label>
+                    <input type="file" name="photo" class="mt-2 w-full bg-gray-700 text-gray-300 p-2 rounded-lg">
                 </div>
-                <div class="flex justify-end space-x-4">
-                    <button type="button" id="cancelPostButton"
-                        class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-all duration-300">
-                        Cancel
-                    </button>
-                    <button type="submit"
-                        class="bg-[#3b82f6] text-white px-4 py-2 rounded-lg hover:bg-[#60a5fa] transition-all duration-300">
-                        Post
-                    </button>
-                </div>
+
+                <button type="submit"
+                    class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">
+                    Post
+                </button>
             </form>
         </div>
     </div>

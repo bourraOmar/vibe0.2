@@ -32,7 +32,7 @@
                         <p class="text-sm text-gray-500 dark:text-gray-400">@ {{ $user->username }}</p>
                     </div>
                 </div>
-               @if ($user->id != auth()->id())
+                @if ($user->id != auth()->id())
                     <!-- Vérifier si une demande d'ami a déjà été envoyée -->
                     @php
                         $friendRequest = \App\Models\FriendRequest::where('user_id', auth()->id())
@@ -46,9 +46,11 @@
                             <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Friend Request</button>
                         </form>
                     @elseif($friendRequest->status == 'pending')
-                        <button class="bg-gray-500 text-white px-4 py-2 rounded-lg" disabled>Pending...</button>
+                        <button class="bg-grayw-500 text-white px-4 py-2 rounded-lg" disabled>Pending...</button>
                     @elseif($friendRequest->status == 'accepted')
                         <button class="bg-gray-500 text-white px-4 py-2 rounded-lg" disabled>Friend</button>
+                    @elseif($friendRequest->status == 'rejected')
+                        <button class="bg-gray-500 text-white px-4 py-2 rounded-lg" disabled>rejected</button>
                     @endif
                 @endif
             </li>

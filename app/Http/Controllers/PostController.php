@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Post;
@@ -8,22 +9,35 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     public function store(Request $request)
-    {
-        $request->validate([
-            'content' => 'required|string|max:500',
-        ]);
+{
+    $request->validate([
+        'content' => 'nullable|string',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        Post::create([
-            'user_id' => Auth::id(),
-            'content' => $request->content,
-        ]);
+    $data = [
+        'user_id' => Auth::id(),
+        'content' => $request->content,
+    ];
 
-        return back()->with('success', 'Post ajouté avec succès !');
+    if ($request->hasFile('photo')) {
+        $data['photo'] = $request->file('photo')->store('posts', 'public');
     }
 
-    public function userPosts($id)
+    Post::create($data);
+
+    return redirect()->back()->with('success', 'Post created successfully.');
+}
+    public function posts(Request $request)
     {
-        $user = User::with('posts')->findOrFail($id);
-        return view('profile', compact('user'));
+        $query = Post::with('user');
+
+        if ($request->has('search')) {
+            $query->where('content', 'like', '%' . $request->search . '%');
+        }
+
+        $posts = $query->latest()->paginate(10);
+
+        return view('posts', compact('posts'));
     }
 }
