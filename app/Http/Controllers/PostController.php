@@ -9,25 +9,28 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     public function store(Request $request)
-{
-    $request->validate([
-        'content' => 'nullable|string',
-        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
+    {
+        $request->validate([
+            'content' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-    $data = [
-        'user_id' => Auth::id(),
-        'content' => $request->content,
-    ];
+        $data = [
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+        ];
 
-    if ($request->hasFile('photo')) {
-        $data['photo'] = $request->file('photo')->store('posts', 'public');
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('uploads', 'public');
+            $data['image'] = $imagePath;
+        } else {
+            $imagePath = null;
+        }
+
+        Post::create($data);
+
+        return redirect()->back()->with('success', 'Post created successfully.');
     }
-
-    Post::create($data);
-
-    return redirect()->back()->with('success', 'Post created successfully.');
-}
     public function posts(Request $request)
     {
         $query = Post::with('user');
@@ -39,5 +42,50 @@ class PostController extends Controller
         $posts = $query->latest()->paginate(10);
 
         return view('posts', compact('posts'));
+    }
+
+    public function edit(Post $post)
+    {
+        return view('posts.edit', compact('post'));
+    }
+
+
+    public function update(Request $request, Post $post)
+    {
+        // Ensure the user is the owner of the post
+        if (Auth::id() !== $post->user_id) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+
+        $request->validate([
+            'content' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $post->content = $request->content;
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $imagePath = 'uploads/' . $imageName;
+            $file->move(public_path('uploads/'), $imageName);
+            $post->image = $imagePath;
+        }
+
+        $post->save();
+
+        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
+    }
+
+    public function destroy(Post $post)
+    {
+        // Ensure the user is the owner of the post
+        if (Auth::id() !== $post->user_id) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+
+        $post->delete();
+
+        return redirect()->back()->with('success', 'Post deleted successfully.');
     }
 }

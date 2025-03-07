@@ -29,6 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile');
+
 Route::get('/profileUser/{id}', [UserController::class, 'show'])->name('profileUser');
 
 Route::get('/users', [UserController::class, 'getAllUsers'])
@@ -79,3 +81,9 @@ Route::post('/posts/{post}/like', [LikeController::class, 'likePost'])->middlewa
 Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comment.store')->middleware('auth');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy')->middleware('auth');
 
+
+// Route::middleware('auth')->group(function () {
+// });
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
