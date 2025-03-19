@@ -44,6 +44,7 @@ class PostController extends Controller
         return view('posts', compact('posts'));
     }
 
+    // PostController.php
     public function edit(Post $post)
     {
         return view('posts.edit', compact('post'));
@@ -52,7 +53,6 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
-        // Ensure the user is the owner of the post
         if (Auth::id() !== $post->user_id) {
             return redirect()->back()->with('error', 'Unauthorized action.');
         }
@@ -66,15 +66,14 @@ class PostController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $imagePath = 'uploads/' . $imageName;
-            $file->move(public_path('uploads/'), $imageName);
+            $imagePath = $file->store('uploads', 'public');
             $post->image = $imagePath;
         }
+        
 
         $post->save();
 
-        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
+        return redirect()->route('posts.store')->with('success', 'Post updated successfully.');
     }
 
     public function destroy(Post $post)

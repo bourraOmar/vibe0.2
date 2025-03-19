@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => bcrypt('password'),  // Password hash
             'remember_token' => Str::random(10),
-            'profile_photo' => 'uploads/téléchargement.png',
+            'profile_photo' => 'images/téléchargement.jpg',
         ];
     }
 

@@ -84,6 +84,7 @@ Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->nam
 
 // Route::middleware('auth')->group(function () {
 // });
-    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    // routes/web.php
+Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');

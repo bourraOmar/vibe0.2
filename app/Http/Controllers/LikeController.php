@@ -13,13 +13,14 @@ class LikeController extends Controller
     {
         $user = Auth::user();
 
-        // Check if user has already liked the post
-        if ($post->isLikedBy($user)) {
-            $post->likes()->where('user_id', $user->id)->delete();
+        $like = $post->likes()->where('user_id', $user->id);
+
+        if ($like->exists()) {
+            $like->delete();
             return response()->json(['message' => 'Like removed']);
-        } else {
-            $post->likes()->create(['user_id' => $user->id]);
-            return response()->json(['message' => 'Post liked']);
         }
+
+        $post->likes()->create(['user_id' => $user->id]);
+        return response()->json(['message' => 'Post liked']);
     }
 }
