@@ -267,7 +267,7 @@
                     }
                 }).then(response => response.json())
                     .then(data => {
-                        location.reload(); // Refresh to update like count
+                        location.reload(); 
                     });
             }
 
